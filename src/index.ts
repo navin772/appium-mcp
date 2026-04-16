@@ -2,8 +2,10 @@
 
 import server from './server.js';
 import log from './logger.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import http from 'node:http';
 
-// Parse command line arguments
 const args = process.argv.slice(2);
 const useHttpStream = args.includes('--httpStream');
 const port =
@@ -14,26 +16,22 @@ async function startServer(): Promise<void> {
 
   try {
     if (useHttpStream) {
-      server.start({
-        transportType: 'httpStream',
-        httpStream: {
-          endpoint: '/sse',
-          port: parseInt(port, 10),
-        },
+      const transport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: undefined,
       });
-
-      log.info(
-        `Server started with httpStream transport on http://localhost:${port}/sse`
-      );
-      log.info('Waiting for client connections...');
+      const httpServer = http.createServer(async (req, res) => {
+        await transport.handleRequest(req, res);
+      });
+      httpServer.listen(parseInt(port, 10), () => {
+        log.info(
+          `Server started with httpStream transport on http://localhost:${port}`
+        );
+      });
+      await server.mcpServer.connect(transport);
     } else {
-      // Start with stdio transport
-      server.start({
-        transportType: 'stdio',
-      });
-
+      const transport = new StdioServerTransport();
+      await server.mcpServer.connect(transport);
       log.info('Server started with stdio transport');
-      log.info('Waiting for client connections...');
     }
   } catch (error: any) {
     log.error('Error starting server:', error);
@@ -41,5 +39,4 @@ async function startServer(): Promise<void> {
   }
 }
 
-// Start the server
 startServer();

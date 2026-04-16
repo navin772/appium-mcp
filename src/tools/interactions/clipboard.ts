@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { getClipboard, setClipboard } from '../../command.js';
@@ -13,7 +14,7 @@ import { getClipboard, setClipboard } from '../../command.js';
  * Appium execute commands and work on Android, iOS, and remote WebDriver
  * sessions.
  */
-export default function clipboard(server: FastMCP): void {
+export default function clipboard(server: AppiumMcpServer): void {
   // ─── Get Clipboard ────────────────────────────────────────────────────────
 
   server.addTool({

@@ -1,10 +1,10 @@
-import { FastMCP } from 'fastmcp';
+import { AppiumMcpServer } from './mcp-adapter.js';
 import registerTools from './tools/index.js';
 import registerResources from './resources/index.js';
 import { listSessions, safeDeleteAllSessions } from './session-store.js';
 import log from './logger.js';
 
-const server = new FastMCP({
+const server = new AppiumMcpServer({
   name: 'MCP Appium',
   version: '1.0.0',
   instructions:
@@ -15,12 +15,8 @@ registerResources(server);
 registerTools(server);
 
 // Handle client connection and disconnection events
-server.on('connect', (event) => {
-  log.info('Client connected:', event.session);
-});
-
-server.on('disconnect', async (event) => {
-  log.info('Client disconnected:', event.session);
+server.mcpServer.server.onclose = async () => {
+  log.info('Client disconnected');
   const sessions = listSessions();
   if (sessions.length > 0) {
     try {
@@ -37,6 +33,6 @@ server.on('disconnect', async (event) => {
   } else {
     log.info('No active sessions to clean up on disconnect.');
   }
-});
+};
 
 export default server;

@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { generateAllElementLocators } from '../../locators/generate-all-locators.js';
 import {
@@ -93,7 +94,7 @@ async function handleiOSAlert(
   await execute(driver, 'mobile: alert', params);
 }
 
-export default function alert(server: FastMCP): void {
+export default function alert(server: AppiumMcpServer): void {
   const appiumAlertSchema = z.object({
     action: z
       .enum(['accept', 'dismiss', 'get_text'])

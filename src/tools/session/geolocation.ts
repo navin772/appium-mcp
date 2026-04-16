@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver, getPlatformName, PLATFORM } from '../../session-store.js';
 import { execute } from '../../command.js';
@@ -135,7 +136,7 @@ async function handleReset(args: GeolocationArgs): Promise<ContentResult> {
   return textResult('Successfully reset geolocation to default.');
 }
 
-export default function geolocation(server: FastMCP): void {
+export default function geolocation(server: AppiumMcpServer): void {
   server.addTool({
     name: 'appium_geolocation',
     description:

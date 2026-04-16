@@ -1,9 +1,10 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { getActiveElement as _getActiveElement } from '../../command.js';
 
-export default function getActiveElement(server: FastMCP): void {
+export default function getActiveElement(server: AppiumMcpServer): void {
   const schema = z.object({
     sessionId: z
       .string()

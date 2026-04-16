@@ -12,7 +12,7 @@
  * See src/tools/README.md for tool organization.
  * See src/tools/metadata/README.md for YAML metadata approach.
  */
-import { FastMCP } from 'fastmcp';
+import type { AppiumMcpServer } from '../mcp-adapter.js';
 import log from '../logger.js';
 import answerAppium from './documentation/answer-appium.js';
 import appiumSkills from './documentation/appium-skills.js';
@@ -55,7 +55,7 @@ import screenRecording from './interactions/screen-recording.js';
 import app from './app-management/app.js';
 import context from './context/context.js';
 
-export default function registerTools(server: FastMCP): void {
+export default function registerTools(server: AppiumMcpServer): void {
   // Wrap addTool to inject logging around tool execution
   const originalAddTool = (server as any).addTool.bind(server);
   (server as any).addTool = (toolDef: any) => {

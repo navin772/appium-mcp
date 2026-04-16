@@ -1,10 +1,11 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver, getPlatformName, PLATFORM } from '../../session-store.js';
 import { elementUUIDScheme } from '../../schema.js';
 import { execute, getElementRect, performActions } from '../../command.js';
 
-export default function longPress(server: FastMCP): void {
+export default function longPress(server: AppiumMcpServer): void {
   const longPressSchema = z.object({
     elementUUID: elementUUIDScheme,
     sessionId: z

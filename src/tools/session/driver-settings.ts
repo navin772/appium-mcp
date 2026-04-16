@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import {
@@ -17,7 +18,7 @@ const updateSettingsSchema = z.object({
     ),
 });
 
-export default function driverSettings(server: FastMCP): void {
+export default function driverSettings(server: AppiumMcpServer): void {
   server.addTool({
     name: 'appium_get_settings',
     description:

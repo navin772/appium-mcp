@@ -1,10 +1,11 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver, getPlatformName, PLATFORM } from '../../session-store.js';
 import { elementUUIDScheme } from '../../schema.js';
 import { execute, getElementRect, performActions } from '../../command.js';
 
-export default function doubleTap(server: FastMCP): void {
+export default function doubleTap(server: AppiumMcpServer): void {
   const doubleTapActionSchema = z.object({
     elementUUID: elementUUIDScheme,
     sessionId: z

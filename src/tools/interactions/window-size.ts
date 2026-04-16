@@ -1,9 +1,10 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { getWindowSize as cmdGetWindowSize } from '../../command.js';
 
-export default function getWindowSize(server: FastMCP): void {
+export default function getWindowSize(server: AppiumMcpServer): void {
   server.addTool({
     name: 'appium_get_window_size',
     description:

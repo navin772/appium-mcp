@@ -1,11 +1,12 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver, getPlatformName, PLATFORM } from '../../session-store.js';
 import { execute } from '../../command.js';
 
 const iosPermissionStateSchema = z.enum(['yes', 'no', 'unset', 'limited']);
 
-export default function mobilePermissions(server: FastMCP): void {
+export default function mobilePermissions(server: AppiumMcpServer): void {
   const schema = z.object({
     action: z
       .enum(['get', 'update', 'reset'])

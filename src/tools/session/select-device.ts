@@ -10,6 +10,7 @@ import {
   createDevicePickerUI,
   addUIResourceToResponse,
 } from '../../ui/mcp-ui-utils.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 
 // Store selected device globally
 let selectedDeviceUdid: string | null = null;
@@ -236,7 +237,10 @@ function formatIOSListResponse(
 /**
  * Handle Android device selection
  */
-async function handleAndroidDeviceSelection(deviceUdid?: string): Promise<any> {
+async function handleAndroidDeviceSelection(
+  deviceUdid: string | undefined,
+  server: AppiumMcpServer
+): Promise<any> {
   const devices = await getAndroidDevices();
 
   if (deviceUdid) {
@@ -250,6 +254,13 @@ async function handleAndroidDeviceSelection(deviceUdid?: string): Promise<any> {
     return formatAndroidSelectionResponse(devices[0].udid);
   }
 
+  // Elicit device choice from the user
+  const udid = await elicitDeviceChoice(server, devices, 'android');
+  if (udid) {
+    selectAndroidDevice(udid, devices);
+    return formatAndroidSelectionResponse(udid);
+  }
+
   return formatAndroidListResponse(devices);
 }
 
@@ -258,7 +269,8 @@ async function handleAndroidDeviceSelection(deviceUdid?: string): Promise<any> {
  */
 async function handleIOSDeviceSelection(
   iosDeviceType: 'simulator' | 'real' | undefined,
-  deviceUdid?: string
+  deviceUdid: string | undefined,
+  server: AppiumMcpServer
 ): Promise<any> {
   const iosManager = IOSManager.getInstance();
   if (!iosManager.isMac()) {
@@ -284,10 +296,59 @@ async function handleIOSDeviceSelection(
     return formatIOSSelectionResponse(selectedDevice.name, devices[0].udid);
   }
 
+  // Elicit device choice from the user
+  const udid = await elicitDeviceChoice(server, devices, 'ios', iosDeviceType);
+  if (udid) {
+    const selectedDevice = selectIOSDevice(udid, devices, iosDeviceType!);
+    return formatIOSSelectionResponse(selectedDevice.name, udid);
+  }
+
   return formatIOSListResponse(devices, iosDeviceType!);
 }
 
-export default function selectDevice(server: any): void {
+async function elicitDeviceChoice(
+  server: AppiumMcpServer,
+  devices: any[],
+  platform: 'android' | 'ios',
+  iosDeviceType?: 'simulator' | 'real'
+): Promise<string | null> {
+  try {
+    const enumValues = devices.map((d) => d.udid);
+    const enumNames = devices.map(
+      (d) =>
+        d.name
+          ? `${d.name} (${d.udid})${d.state ? ` - ${d.state}` : ''}`
+          : d.udid
+    );
+    const label =
+      platform === 'ios'
+        ? `iOS ${iosDeviceType ?? ''} device`
+        : 'Android device';
+
+    const result = await server.elicitInput({
+      message: `Multiple ${label}s found. Please select one:`,
+      properties: {
+        device: {
+          type: 'string',
+          enum: enumValues,
+          enumNames,
+          description: `Select a ${label}`,
+        },
+      },
+      required: ['device'],
+    });
+
+    if (result.action === 'accept' && result.content?.device) {
+      return result.content.device as string;
+    }
+    return null;
+  } catch {
+    log.info('Elicitation not supported by client, falling back to list response');
+    return null;
+  }
+}
+
+export default function selectDevice(server: AppiumMcpServer): void {
   server.addTool({
     name: 'select_device',
     description: `Discover and select a device for LOCAL Appium servers ONLY.
@@ -340,9 +401,9 @@ export default function selectDevice(server: any): void {
         const { platform, iosDeviceType, deviceUdid } = args;
 
         if (platform === 'android') {
-          return await handleAndroidDeviceSelection(deviceUdid);
+          return await handleAndroidDeviceSelection(deviceUdid, server);
         } else if (platform === 'ios') {
-          return await handleIOSDeviceSelection(iosDeviceType, deviceUdid);
+          return await handleIOSDeviceSelection(iosDeviceType, deviceUdid, server);
         } else {
           throw new Error(
             `Invalid platform: ${platform}. Please choose 'android' or 'ios'.`

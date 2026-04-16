@@ -3,7 +3,8 @@
  * Chains: boot simulator → download WDA → install & launch WDA.
  * Each step checks preconditions and skips if already satisfied.
  */
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -443,7 +444,7 @@ const prepareIosSimulatorSchema = z.object({
     ),
 });
 
-export default function prepareIosSimulator(server: FastMCP): void {
+export default function prepareIosSimulator(server: AppiumMcpServer): void {
   server.addTool({
     name: 'prepare_ios_simulator',
     description:

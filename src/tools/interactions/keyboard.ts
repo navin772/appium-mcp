@@ -1,9 +1,10 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { execute } from '../../command.js';
 
-export default function keyboard(server: FastMCP): void {
+export default function keyboard(server: AppiumMcpServer): void {
   const hideKeyboardSchema = z.object({
     keys: z
       .array(z.string())

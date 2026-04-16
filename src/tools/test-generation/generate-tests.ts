@@ -1,7 +1,7 @@
-import { FastMCP } from 'fastmcp';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 
-export default function generateTest(server: FastMCP): void {
+export default function generateTest(server: AppiumMcpServer): void {
   const generateTestSchema = z.object({
     steps: z.array(z.string()).describe('The steps of the test'),
   });

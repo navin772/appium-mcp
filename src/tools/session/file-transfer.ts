@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver, getPlatformName, PLATFORM } from '../../session-store.js';
 import { execute } from '../../command.js';
@@ -28,7 +29,7 @@ const remotePathDescription =
   'iOS (XCUITest): use the formats described in the Appium XCUITest file transfer guide ' +
   '(e.g. @com.example.app:documents/file.txt or simulator-relative paths).';
 
-export default function fileTransfer(server: FastMCP): void {
+export default function fileTransfer(server: AppiumMcpServer): void {
   const schema = z.object({
     action: z
       .enum(['push', 'pull'])

@@ -1,10 +1,11 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { elementUUIDScheme } from '../../schema.js';
 import { getElementText } from '../../command.js';
 
-export default function getText(server: FastMCP): void {
+export default function getText(server: AppiumMcpServer): void {
   const getTextSchema = z.object({
     elementUUID: elementUUIDScheme,
     sessionId: z

@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import {
@@ -8,7 +9,7 @@ import {
 } from '../../ui/mcp-ui-utils.js';
 import { getPageSource as _getPageSource } from '../../command.js';
 
-export default function getPageSource(server: FastMCP): void {
+export default function getPageSource(server: AppiumMcpServer): void {
   const pageSourceSchema = z.object({
     sessionId: z
       .string()

@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { elementUUIDScheme } from '../../schema.js';
@@ -8,7 +9,7 @@ import {
 } from '../../command.js';
 import log from '../../logger.js';
 
-export default function generateTest(server: FastMCP): void {
+export default function generateTest(server: AppiumMcpServer): void {
   const clickActionSchema = z.object({
     elementUUID: elementUUIDScheme,
     sessionId: z

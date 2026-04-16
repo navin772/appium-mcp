@@ -1,4 +1,4 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult, AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { getScreenshot } from '../../command.js';
@@ -49,7 +49,7 @@ export const findElementSchema = z.object({
     .describe('Session ID to target. If omitted, uses the active session.'),
 });
 
-export default function findElement(server: FastMCP): void {
+export default function findElement(server: AppiumMcpServer): void {
   server.addTool({
     name: 'appium_find_element',
     description: `Find a specific element by strategy and selector which will return a uuid that can be used for interactions.

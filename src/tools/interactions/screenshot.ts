@@ -1,4 +1,4 @@
-import { FastMCP } from 'fastmcp';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { getDriver } from '../../session-store.js';
 import { elementUUIDScheme } from '../../schema.js';
 import type { NullableDriverInstance } from '../../session-store.js';
@@ -126,7 +126,7 @@ const screenshotSchema = z.object({
     .describe('Session ID to target. If omitted, uses the active session.'),
 });
 
-export default function screenshot(server: FastMCP): void {
+export default function screenshot(server: AppiumMcpServer): void {
   server.addTool({
     name: 'appium_screenshot',
     description:

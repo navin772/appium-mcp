@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import {
   getDriver,
@@ -28,7 +29,7 @@ const contextSchema = z.object({
     .describe('Session ID to target. If omitted, uses the active session.'),
 });
 
-export default function context(server: FastMCP): void {
+export default function context(server: AppiumMcpServer): void {
   server.addTool({
     name: 'appium_context',
     description:

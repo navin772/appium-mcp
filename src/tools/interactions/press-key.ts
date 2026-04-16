@@ -1,4 +1,5 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import {
   getDriver,
@@ -33,7 +34,7 @@ const IOS_BUTTON_MAP: Record<string, string> = {
 };
 const IOS_BUTTONS_DESCRIPTION = Object.keys(IOS_BUTTON_MAP).join(', ');
 
-export default function pressKey(server: FastMCP): void {
+export default function pressKey(server: AppiumMcpServer): void {
   const pressKeySchema = z
     .object({
       sessionId: z

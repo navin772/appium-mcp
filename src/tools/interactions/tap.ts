@@ -1,9 +1,10 @@
-import type { ContentResult, FastMCP } from 'fastmcp';
+import type { ContentResult } from '../../mcp-adapter.js';
+import type { AppiumMcpServer } from '../../mcp-adapter.js';
 import { z } from 'zod';
 import { getDriver } from '../../session-store.js';
 import { performActions } from '../../command.js';
 
-export default function tap(server: FastMCP): void {
+export default function tap(server: AppiumMcpServer): void {
   const tapSchema = z.object({
     x: z.number().describe('X coordinate to tap on the screen'),
     y: z.number().describe('Y coordinate to tap on the screen'),
