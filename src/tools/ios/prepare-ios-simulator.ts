@@ -116,7 +116,11 @@ async function getLatestWDAVersionFromCache(): Promise<string | null> {
 
 async function getSimulatorArchitecture(simulatorUdid: string): Promise<string> {
   const {stdout} = await exec('xcrun', ['simctl', 'getenv', simulatorUdid, 'SIMULATOR_ARCHS']);
-  return stdout.trim();
+  // SIMULATOR_ARCHS is a space-separated list on runtimes that support more than one slice
+  // (iOS 18 reports "arm64 x86_64"), so it cannot be used verbatim in an artifact name.
+  // Prefer arm64 whenever present
+  const archs = stdout.trim().split(/\s+/).filter(Boolean);
+  return archs.includes('arm64') ? 'arm64' : 'x86_64';
 }
 
 async function installAppOnSimulator(appPath: string, simulatorUdid: string): Promise<void> {
